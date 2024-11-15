@@ -2,6 +2,14 @@
 
 # BIGMART SALES ANALYSIS REPORT
 
+## TABLE OF CONTENT 
+- [INTRODUCTION](#INTRODUCTION)
+- [ANALYSIS](#ANALYSIS)
+- [RECOMMENDATION](#RECOMMENDATION)
+- [CONCLUSION](#CONCLUSION)
+- [RECOMMENDATION](#RECOMMENDATION)
+
+
 ### INTRODUCTION
 
 BigMart Sales Data provides a detailed view of retail operations, including item specifics, outlet details, and sales labels. This dataset empowers businesses to strategically tailor product modifications and marketing efforts by understanding customer preferences and optimizing resources based on outlet types and sales trends. 
@@ -21,7 +29,10 @@ With insights into diverse factors such as outlet size, location, and establishm
 ### ANALYSIS
 
 This report highlights that among products sold at outlets established in 1999, snack foods emerged as the top-performing category. With total sales reaching $700,000, snack foods demonstrated the strongest sales performance in this segment. This finding underscores the popularity and demand for snack foods in these particular outlets, offering valuable insights for strategic planning in product stocking, marketing efforts, and resource allocation to further capitalize on consumer preferences in established outlets.
-(radial pic)
+
+![big1](https://github.com/user-attachments/assets/8a87ea13-2b7a-4a3e-b2f4-df2cb87132b0)
+
+
 This report reveals that seafood had the lowest overall sales, totaling $52,629, at outlets established in 1997. Despite this, seafood still recorded the highest sales among products specifically available in outlets founded that year. This insight indicates a unique demand for seafood in 1997-established outlets, providing a basis for targeted product positioning and marketing strategies to improve sales in similar settings.
 
 A strong customer preference for low-fat foods, reflecting a growing awareness of health and wellness. This trend is particularly impressive, as low-fat options are often associated with healthier dietary choices, aligning with consumer demand for products that support a balanced lifestyle.
@@ -30,6 +41,9 @@ Price plays a significant role in influencing product sales across different loc
 tailoring product pricing and sizing to the purchasing behaviors of each location tier can effectively boost sales.
 
 This report highlights that low-priced products achieve significantly higher visibility and sales compared to their high-priced counterparts. The affordability of these products makes them more appealing to a broader customer base, driving greater demand and accessibility. This trend suggests that price-sensitive consumers are more inclined toward purchasing lower-cost items, which directly impacts sales volume. For businesses, this insight underscores the importance of offering competitively priced products to maximize reach and capture a larger market share, especially in segments where visibility and volume are critical to sales performance.
+
+![big2](https://github.com/user-attachments/assets/f923d280-15e1-41c6-9c03-da735715fed9)
+
 
 ## RECOMMENDATION
 
@@ -48,4 +62,10 @@ o	Tier 3: Position medium-sized products as the preferred option, balancing affo
 ## CONCLUSION
 
 This is an accurate analysis and recommendation provided base on the available set of data. And by implementing these recommendations, the company can strengthen its competitive edge, cater to diverse customer needs across different markets, and position itself for sustained growth and expansion.
+
+## REVIEW
+
+Review the Tableau dashboard for more information and analysis
+
+[DASHBOARD](#https://public.tableau.com/app/profile/lekan.haruna/viz/BigMart_Sales_17315878755680/BigMart)
 
