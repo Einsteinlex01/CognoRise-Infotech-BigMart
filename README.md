@@ -68,5 +68,5 @@ This is an accurate analysis and recommendation provided base on the available s
 
 Review the Tableau dashboard for more information and analysis
 
-[DASHBOARD](#https://public.tableau.com/app/profile/lekan.haruna/viz/BigMart_Sales_17315878755680/BigMart)
+[DASHBOARD](https://public.tableau.com/app/profile/lekan.haruna/viz/BigMart_Sales_17315878755680/BigMart)
 
