@@ -4,11 +4,14 @@
 
 ## TABLE OF CONTENT 
 - [INTRODUCTION](#INTRODUCTION)
+- [KPI (Key Performance Indicator)](#KPI-(Key-Performance-Indicator))
+- [SQL](#SQL)
 - [ANALYSIS](#ANALYSIS)
 - [RECOMMENDATION](#RECOMMENDATION)
 - [CONCLUSION](#CONCLUSION)
 - [RECOMMENDATION](#RECOMMENDATION)
 - [REVIEW](#REVIEW)
+  
 
 
 ### INTRODUCTION
@@ -26,6 +29,406 @@ With insights into diverse factors such as outlet size, location, and establishm
 6.	The most visible item to the customer.
 7.	How does the outlet size affect the sales of items.
 8.	Store which has the highest product sales
+
+## SQL 
+
+This is the code use for [DATA CLEANING]
+
+```SQL
+-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<BIGMART SALES PROJECT>>>>>>>>>>>>>>>>>>>>>>>
+
+/* AIMS AND OBJECTIVE 
+	DATA CLEANING
+		A. Creating database BIGMART_DB
+			i. creating tables(train, test, train_1, test_2)
+		B. DATA WRANGLING Involving
+			data wrangling: adjust by modifying the column datatype and the standardization of data seem
+			to be okay so no standardization is needed to be done
+        C. Feauture engineering
+			i. Removing duplicate 
+            ii. Adding extra column to help remove duplicates
+            iii. Filling blank spaces
+            IV. Trimming to remve white space */
+
+-- dropping any bigmart database if exist and creating database a new database
+
+Drop database if exists BigMart_DB;
+create database BigMart_DB;
+
+-- dropping and creating a new table train 
+-- import data from external source to the databasre table
+
+drop table if exists train;
+create table Train(
+	Item_identifier varchar(6),
+    item_weight float(10,5),
+    Item_fat_content varchar(16),
+    Item_visibility decimal(15,12),
+    Item_type varchar(16),
+    Item_mpr decimal(15,12),
+    Outlet_identifier varchar(16),
+    Outlet_establishment_year INT,
+    Outlet_size varchar(11),
+    Outlet_location_type varchar(8),
+    Outlet_type varchar(20),
+    item_outlet_sales decimal(15,7)
+);
+
+-- select all from train table
+select 
+	*
+from 
+	Train;
+
+-- dropping and creating a new table test
+-- import data from external source to the database table
+
+drop table if exists test;
+create table test(
+	Item_identifier varchar(6),
+    item_weight float(10,5),
+    Item_fat_content varchar(16),
+    Item_visibility decimal(15,12),
+    Item_type varchar(16),
+    Item_mpr decimal(15,12),
+    Outlet_identifier varchar(16),
+    Outlet_establishment_year INT,
+    Outlet_size varchar(11),
+    Outlet_location_type varchar(8),
+    Outlet_type varchar(20)
+);
+
+-- select all from test table
+
+select 
+	*
+from 
+	Test;
+ 
+-- self joinning table to join two unequal train and test table which is not possible
+
+select 
+	t1.*,
+    t2.*
+from train t1
+cross join 
+train t2 on t1.item_identifier = t2.item_identifier;
+
+-- Removing duplicate value by adding a new column to the table using window function
+select 
+	*,
+    row_number() over (partition by item_identifier,item_weight,item_fat_content,item_visibility,item_type) as row_num
+from 
+	train;
+    
+drop table if exists train_1;
+
+-- creating a new table from previously existing table to add window function and remove duplicate to clean up the table
+
+create table train_1(
+	Item_identifier varchar(6),
+    item_weight float(10,5),
+    Item_fat_content varchar(16),
+    Item_visibility decimal(15,12),
+    Item_type varchar(16),
+    Item_mpr decimal(15,12),
+    Outlet_identifier varchar(16),
+    Outlet_establishment_year INT,
+    Outlet_size varchar(11),
+    Outlet_location_type varchar(8),
+    Outlet_type varchar(20),
+    item_outlet_sales decimal(15,7) ,
+    row_num int
+);
+
+insert into train_1
+select 
+	*,
+    row_number() over (partition by item_identifier,item_weight,item_fat_content,item_visibility,item_type) as row_num
+from 
+	train;
+    
+select 
+	*
+from 
+	train_1;
+select 
+	*
+from 
+	train_1
+where row_num > 1;
+
+Delete
+from 
+	train_1
+where row_num > 1;
+
+-- checking for any null value
+select 
+	count(*)
+from 
+	train_1
+where outlet_size = "High";
+
+select 
+	count(*)
+from 
+	train_1
+where outlet_size = "small";
+
+select 
+	count(*)
+from 
+	train_1
+where outlet_size = "medium";
+
+select 
+	*
+from
+	train_1
+where item_type = "soft drinks" and outlet_size = "small";
+
+
+-- changing blank spaces to null
+select 
+	*
+from
+	train_1
+where outlet_size = "";
+
+update train_1
+set outlet_size = null
+where outlet_size = "";
+
+-- selecting null values and fiding solutions to it
+
+select 
+	*
+from
+	train_1
+where outlet_size is null;
+
+select
+	*
+from
+	train_1 
+where item_type = "snack foods";
+
+-- triming the entire table to remove white spaces 
+
+update train_1
+set Item_identifier = trim(Item_identifier);
+
+update train_1
+set item_weight = trim(item_weight);
+
+update train_1
+set Item_fat_content = trim(Item_fat_content);
+
+update train_1
+set Item_visibility = trim(Item_visibility);
+
+update train_1
+set Item_type = trim(Item_type);
+
+update train_1
+set Item_mpr = trim(Item_mpr);
+
+update train_1
+set Outlet_identifier = trim(Outlet_identifier);
+
+update train_1
+set Outlet_establishment_year = trim(Outlet_establishment_year);
+
+update train_1
+set Outlet_size = trim(Outlet_size);
+
+update train_1
+set Outlet_location_type = trim(Outlet_location_type);
+
+update train_1
+set Outlet_type = trim(Outlet_type);
+
+update train_1
+set item_outlet_sales = trim(item_outlet_sales);
+
+-- self joining table to fill up blank spaces
+select 
+	t1.*,
+    t2.*
+from train_1 t1
+join
+train_1 t2 on t1.item_identifier = t2.item_identifier
+where t1.Outlet_size is not null and t2.Outlet_size is null;
+
+update train_1 t1
+join train_1 t2
+	on t1.item_identifier = t2.item_identifier
+set t2.outlet_size = t1.outlet_size
+where t1.outlet_size is not null and t2.outlet_size is null;
+
+-- selecting and deleting untrusted data which is 0.6% of the entire data
+
+select 
+	*
+from 
+	train_1
+where Outlet_size is null;
+
+delete 
+from
+	train_1
+where Outlet_size is null;
+
+alter table train_1
+drop column row_num;
+
+select 
+	*
+from 
+	train_1;
+
+drop table if exists test_2;
+-- creating a new table from previously existing table to add window function and remove duplicate to clean up the table
+
+CREATE TABLE `test_2` (
+  `Item_identifier` varchar(6) DEFAULT NULL,
+  `item_weight` float(10,5) DEFAULT NULL,
+  `Item_fat_content` varchar(16) DEFAULT NULL,
+  `Item_visibility` decimal(15,12) DEFAULT NULL,
+  `Item_type` varchar(16) DEFAULT NULL,
+  `Item_mpr` decimal(15,12) DEFAULT NULL,
+  `Outlet_identifier` varchar(16) DEFAULT NULL,
+  `Outlet_establishment_year` int DEFAULT NULL,
+  `Outlet_size` varchar(11) DEFAULT NULL,
+  `Outlet_location_type` varchar(8) DEFAULT NULL,
+  `Outlet_type` varchar(20) DEFAULT NULL,
+	`row_num` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- selecting all from test_2 table
+select 
+	*
+from 
+	Test_2;
+    
+insert into test_2
+select 
+	*,
+    row_number() over (partition by item_identifier,item_weight,item_fat_content,item_visibility,item_type) as row_num
+from 
+	test;
+
+select 
+	*
+from 
+	test_2
+where row_num > 1;
+
+Delete
+from 
+	test_2
+where row_num > 1;
+
+-- triming the entire table to remove white spaces 
+
+update test_2
+set Item_identifier = trim(Item_identifier);
+
+update test_2
+set item_weight = trim(item_weight);
+
+update test_2
+set Item_fat_content = trim(Item_fat_content);
+
+update test_2
+set Item_visibility = trim(Item_visibility);
+
+update test_2
+set Item_type = trim(Item_type);
+
+update test_2
+set Item_mpr = trim(Item_mpr);
+
+update test_2
+set Outlet_identifier = trim(Outlet_identifier);
+
+update test_2
+set Outlet_establishment_year = trim(Outlet_establishment_year);
+
+update test_2
+set Outlet_size = trim(Outlet_size);
+
+update test_2
+set Outlet_location_type = trim(Outlet_location_type);
+
+update test_2
+set Outlet_type = trim(Outlet_type);
+
+-- checking for null values
+
+select 
+	*
+from
+	test_2
+where outlet_size = "";
+
+-- changing blank space to null
+
+update test_2
+set outlet_size = null
+where outlet_size = "";
+
+-- selecting all null values
+select 
+	*
+from 
+	test_2
+where Outlet_size is null;
+
+-- self joining table to fill up blank spaces
+
+select 
+	t1.*,
+    t2.*
+from test_2 t1
+join
+test_2 t2 on t1.item_identifier = t2.item_identifier
+where t1.Outlet_size is not null and t2.Outlet_size is null;
+
+update test_2 t1
+join test_2 t2
+	on t1.item_identifier = t2.item_identifier
+set t2.outlet_size = t1.outlet_size
+where t1.outlet_size is not null and t2.outlet_size is null;
+
+-- selecting and deleting untrusted data which is 0.6% of the entire data
+
+delete 
+from
+	test_2
+where Outlet_size is null;
+
+select 
+	*
+from 
+	Test_2;
+-- deleting row_num column
+alter table test_2
+drop column row_num;
+
+SELECT
+	*
+FROM 
+	test_2;
+    
+select 
+	*
+from 
+	train_1;
+
+-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<END>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+```
 
 ### ANALYSIS
 
